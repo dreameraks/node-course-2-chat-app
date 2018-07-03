@@ -24,6 +24,20 @@ io.on('connection',(socket) => {
   socket.on('disconnect' , ()=> {
     console.log('Disconnected from client');
   });
+
+
+  socket.on('createMessage',(message)=> {
+    console.log('New message' , message);
+  })
+
+
+  socket.emit('newMessage',{
+    from:"Ram",
+    text:'Hi',
+    createdAt:123
+  });
+
+
 });
 
 server.listen(port , () => {
