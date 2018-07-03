@@ -10,6 +10,8 @@ const publicPath = path.join(__dirname , '../public');
 
 const port = process.env.PORT || 3000;
 
+const {generateMessage} = require('./utils/message');
+
 var app = express();
 
 var server = http.createServer(app);
@@ -26,16 +28,9 @@ io.on('connection',(socket) => {
   });
 
 
-  io.emit('newMessage',{
-    from:'Admin',
-    text:'Welcome to chat app'
-  });
+  io.emit('newMessage',generateMessage('Admin','Welcome to chat app'));
 
-  socket.broadcast.emit('newMessage', {
-    from:'Admin',
-    text:'New user joined',
-    createdAt:new Date().getTime()
-  });
+  socket.broadcast.emit('newMessage',generateMessage('Admin','New user joined'));
 
 
 
@@ -44,11 +39,7 @@ io.on('connection',(socket) => {
     console.log('New message' , message);
 
 
-    io.emit('newMessage', {
-      from:message.from,
-      text:message.text,
-      createdAt:new Date().getTime()
-    });
+    io.emit('newMessage', generateMessage(message.from,message.text));
 /*
     socket.broadcast.emit('newMessage', {
       from:message.from,
