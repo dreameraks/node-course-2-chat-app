@@ -12,6 +12,8 @@ const port = process.env.PORT || 3000;
 
 const {generateMessage} = require('./utils/message');
 
+const {generateLocationMessage} = require('./utils/message');
+
 var app = express();
 
 var server = http.createServer(app);
@@ -25,6 +27,12 @@ io.on('connection',(socket) => {
 
   socket.on('disconnect' , ()=> {
     console.log('Disconnected from client');
+  });
+
+  socket.on('createLocationMessage',(coords) => {
+    
+    io.emit('newLocationMessage', generateLocationMessage('User' ,coords.longitude, coords.latitude));
+
   });
 
 
