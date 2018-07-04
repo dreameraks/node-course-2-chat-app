@@ -14,6 +14,8 @@ const {generateMessage} = require('./utils/message');
 
 const {generateLocationMessage} = require('./utils/message');
 
+const {isRealString} = require('./utils/validation');
+
 var app = express();
 
 var server = http.createServer(app);
@@ -29,16 +31,22 @@ io.on('connection',(socket) => {
     console.log('Disconnected from client');
   });
 
+  socket.on('join' , (params , callback) => {
+    socket.join(params.room);
+
+    socket.emit('newMessage',generateMessage('Admin','Welcome to chat app'));
+
+    socket.broadcast.to(params.room).emit('newMessage',generateMessage('Admin',`${params.name} has joined.`));
+  });
+
   socket.on('createLocationMessage',(coords) => {
-    
+
     io.emit('newLocationMessage', generateLocationMessage('User' ,coords.longitude, coords.latitude));
 
   });
 
 
-  io.emit('newMessage',generateMessage('Admin','Welcome to chat app'));
 
-  socket.broadcast.emit('newMessage',generateMessage('Admin','New user joined'));
 
 
 
